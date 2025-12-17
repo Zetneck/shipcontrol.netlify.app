@@ -58,10 +58,9 @@ export default function App() {
     // Limitar a 30 acciones máximo
     if (nuevoHistorial.length > 30) {
       nuevoHistorial.shift()
-    } else {
-      setIndiceHistorial(indiceHistorial + 1)
     }
     
+    setIndiceHistorial(nuevoHistorial.length - 1)
     setHistorial(nuevoHistorial)
   }
 
@@ -136,7 +135,7 @@ export default function App() {
 
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [indiceHistorial, historial])
+  }, [indiceHistorial, historial, embarques])
   useEffect(() => {
     const savedData = localStorage.getItem('zaro-instrucciones-draft')
     if (savedData) {
@@ -175,7 +174,7 @@ export default function App() {
     if (!ignorarHistorialRef.current) {
       agregarAlHistorial(embarques, autorPor)
     }
-  }, [embarques])
+  }, [embarques, autorPor])
 
   const agregarEmbarque = () => {
     const newEmbarque = {
@@ -304,10 +303,8 @@ export default function App() {
     setToasts(prev => prev.filter(t => t.id !== id))
   }
 
-  const embarqueActual = embarques[0]
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100 p-3 sm:p-4 md:p-6">
+    <div className="min-h-screen bg-[#121212] text-white p-3 sm:p-4 md:p-6">
       {/* Toast Container */}
       <div className="fixed top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 z-50 space-y-2 sm:space-y-3 max-w-[90vw] sm:max-w-md">
         {toasts.map(toast => (
@@ -323,15 +320,15 @@ export default function App() {
 
       <div className="max-w-7xl mx-auto min-h-full flex flex-col gap-4">
         {/* Header */}
-        <div className="mb-6 sm:mb-8 md:mb-10 animate-slideUp text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-red-500 via-red-400 to-orange-500 bg-clip-text text-transparent mb-2 sm:mb-3 md:mb-4 tracking-tight leading-tight drop-shadow-2xl px-2">
+        <div className="mb-6 sm:mb-8 md:mb-10 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black bg-gradient-to-r from-[#ff4757] via-[#E63946] to-[#ff4757] bg-clip-text text-transparent mb-2 sm:mb-3 md:mb-4 tracking-tight leading-tight px-2">
             INSTRUCCIONES DE EMBARQUE
           </h1>
-          <p className="text-slate-400 text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wide px-2">Asignación y control de instrucciones de embarque</p>
+          <p className="text-[#b3b3b3] text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wide px-2">Asignación y control de instrucciones de embarque</p>
         </div>
 
         {/* Botones Control + Exportación */}
-        <div className="bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-800/80 border border-slate-700/50 rounded-xl sm:rounded-2xl shadow-2xl shadow-black/40 p-3 sm:p-4 md:p-6 mb-2 sm:mb-3 md:mb-4 backdrop-blur-xl animate-scaleIn card-hover overflow-hidden">
+        <div className="bg-[#1a1a1a] border border-[#333333] rounded-lg p-3 sm:p-4 md:p-6 mb-2 sm:mb-3 md:mb-4 hover:bg-[#202020] hover:border-[#3a3a3a] transition-all duration-200">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
             {/* Botones Undo/Redo */}
             <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
@@ -339,7 +336,7 @@ export default function App() {
                 onClick={deshacer}
                 disabled={indiceHistorial <= 0}
                 title="Deshacer (Ctrl+Z)"
-                className="flex-1 sm:flex-initial items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-800/80 hover:bg-slate-700/80 disabled:opacity-30 disabled:cursor-not-allowed text-slate-300 hover:text-white rounded-lg sm:rounded-xl transition-all font-bold border border-slate-600 hover:border-slate-500 hover:scale-105 active:scale-95 shadow-lg disabled:hover:scale-100 text-xs sm:text-sm flex"
+                className="flex-1 sm:flex-initial items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#282828] hover:bg-[#3e3e3e] disabled:opacity-30 disabled:cursor-not-allowed text-white rounded-full transition-all font-bold hover:scale-105 active:scale-95 disabled:hover:scale-100 text-xs sm:text-sm flex"
               >
                 <RotateCcw size={16} className="sm:w-[18px] sm:h-[18px]" />
                 <span className="hidden xs:inline">Deshacer</span>
@@ -348,7 +345,7 @@ export default function App() {
                 onClick={rehacer}
                 disabled={indiceHistorial >= historial.length - 1}
                 title="Rehacer (Ctrl+Y)"
-                className="flex-1 sm:flex-initial items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-slate-800/80 hover:bg-slate-700/80 disabled:opacity-30 disabled:cursor-not-allowed text-slate-300 hover:text-white rounded-lg sm:rounded-xl transition-all font-bold border border-slate-600 hover:border-slate-500 hover:scale-105 active:scale-95 shadow-lg disabled:hover:scale-100 text-xs sm:text-sm flex"
+                className="flex-1 sm:flex-initial items-center justify-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#282828] hover:bg-[#3e3e3e] disabled:opacity-30 disabled:cursor-not-allowed text-white rounded-full transition-all font-bold hover:scale-105 active:scale-95 disabled:hover:scale-100 text-xs sm:text-sm flex"
               >
                 <RotateCw size={16} className="sm:w-[18px] sm:h-[18px]" />
                 <span className="hidden xs:inline">Rehacer</span>
@@ -359,14 +356,14 @@ export default function App() {
             <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
               <button
                 onClick={() => exportarImagen('png')}
-                className="flex-1 sm:flex-initial items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-sky-600 via-sky-500 to-sky-600 text-white rounded-lg sm:rounded-xl hover:from-sky-500 hover:via-sky-400 hover:to-sky-500 transition-all font-bold shadow-2xl shadow-sky-500/50 hover:shadow-sky-500/70 transform hover:scale-105 sm:hover:scale-110 active:scale-95 text-xs sm:text-sm flex"
+                className="flex-1 sm:flex-initial items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-[#E63946] text-white rounded-full hover:bg-[#ff4757] transition-all font-bold transform hover:scale-105 active:scale-95 text-xs sm:text-sm flex"
               >
                 <Download size={18} strokeWidth={2.5} className="sm:w-5 sm:h-5" />
                 <span>PNG</span>
               </button>
               <button
                 onClick={() => exportarImagen('jpg')}
-                className="flex-1 sm:flex-initial items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 text-white rounded-lg sm:rounded-xl hover:from-emerald-500 hover:via-emerald-400 hover:to-emerald-500 transition-all font-bold shadow-2xl shadow-emerald-500/50 hover:shadow-emerald-500/70 transform hover:scale-105 sm:hover:scale-110 active:scale-95 text-xs sm:text-sm flex"
+                className="flex-1 sm:flex-initial items-center justify-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-[#E63946] text-white rounded-full hover:bg-[#ff4757] transition-all font-bold transform hover:scale-105 active:scale-95 text-xs sm:text-sm flex"
               >
                 <Download size={18} strokeWidth={2.5} className="sm:w-5 sm:h-5" />
                 <span>JPG</span>

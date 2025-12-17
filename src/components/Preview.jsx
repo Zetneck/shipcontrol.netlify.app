@@ -68,20 +68,20 @@ const Preview = forwardRef(({ formato, autorPor, embarques, embarqueSeleccionado
   }, [embarqueSeleccionadoId, tipoFiltro])
 
   return (
-    <div className="animate-fadeIn">
+    <div>
       {/* Controles: selector de embarque y filtro por tipo */}
-      <div className="bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-800/80 border border-slate-700/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 mb-3 sm:mb-4 md:mb-5 space-y-3 sm:space-y-4 shadow-2xl shadow-black/40 backdrop-blur-xl card-hover">
+      <div className="bg-[#1a1a1a] border border-[#333333] rounded-lg p-3 sm:p-4 md:p-5 mb-3 sm:mb-4 md:mb-5 space-y-3 sm:space-y-4 hover:bg-[#202020] hover:border-[#3a3a3a] transition-all duration-200">
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-          <span className="text-[10px] sm:text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+          <span className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
             <span className="text-base sm:text-lg">📦</span>
             Embarque:
           </span>
           <button
             onClick={() => setEmbarqueSeleccionadoId(null)}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all shadow-lg ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold transition-all ${
               embarqueSeleccionadoId === null
-                ? 'bg-gradient-to-r from-zaro-red to-red-500 text-white shadow-red-500/50 scale-105'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:scale-105'
+                ? 'bg-[#E63946] text-white scale-105'
+                : 'bg-[#2a2a2a] border border-[#404040] text-[#cccccc] hover:bg-[#333333] hover:border-[#4a4a4a] hover:scale-105'
             }`}
           >
             Ver Todos
@@ -91,10 +91,10 @@ const Preview = forwardRef(({ formato, autorPor, embarques, embarqueSeleccionado
               <button
                 key={embarque.id}
                 onClick={() => setEmbarqueSeleccionadoId(embarqueSeleccionadoId === embarque.id ? null : embarque.id)}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all shadow-lg ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold transition-all ${
                   embarqueSeleccionadoId === embarque.id
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-blue-500/50 scale-105 ring-2 ring-blue-400/30'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:scale-105'
+                    ? 'bg-[#E63946] text-white scale-105 ring-2 ring-[#E63946]/50'
+                    : 'bg-[#2a2a2a] border border-[#404040] text-[#cccccc] hover:bg-[#333333] hover:border-[#4a4a4a] hover:scale-105'
                 }`}
               >
                 #{index + 1}
@@ -104,36 +104,36 @@ const Preview = forwardRef(({ formato, autorPor, embarques, embarqueSeleccionado
         </div>
 
         <div className="flex gap-2 sm:gap-3 items-center flex-wrap">
-          <span className="text-[10px] sm:text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+          <span className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
             <span className="text-base sm:text-lg">🔍</span>
             Filtrar por tipo:
           </span>
           <button
             onClick={() => setTipoFiltro(null)}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all shadow-lg ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold transition-all ${
               tipoFiltro === null
-                ? 'bg-gradient-to-r from-zaro-red to-red-500 text-white shadow-red-500/50 scale-105'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:scale-105'
+                ? 'bg-[#E63946] text-white scale-105'
+                : 'bg-[#2a2a2a] border border-[#404040] text-[#cccccc] hover:bg-[#333333] hover:border-[#4a4a4a] hover:scale-105'
             }`}
           >
             Todos
           </button>
           <button
             onClick={() => setTipoFiltro(tipoFiltro === 'export' ? null : 'export')}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all shadow-lg ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold transition-all ${
               tipoFiltro === 'export'
-                ? 'bg-gradient-to-r from-slate-700 to-slate-600 text-white shadow-slate-600/50 scale-105 ring-2 ring-slate-500/30'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:scale-105'
+                ? 'bg-[#E63946] text-white scale-105 ring-2 ring-[#E63946]/50'
+                : 'bg-[#2a2a2a] border border-[#404040] text-[#cccccc] hover:bg-[#333333] hover:border-[#4a4a4a] hover:scale-105'
             }`}
           >
             Exportación
           </button>
           <button
             onClick={() => setTipoFiltro(tipoFiltro === 'import' ? null : 'import')}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all shadow-lg ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold transition-all ${
               tipoFiltro === 'import'
-                ? 'bg-gradient-to-r from-red-600 to-red-500 text-white shadow-red-500/50 scale-105 ring-2 ring-red-400/30'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:scale-105'
+                ? 'bg-[#E63946] text-white scale-105 ring-2 ring-[#E63946]/50'
+                : 'bg-[#2a2a2a] border border-[#404040] text-[#cccccc] hover:bg-[#333333] hover:border-[#4a4a4a] hover:scale-105'
             }`}
           >
             Importación
@@ -177,7 +177,7 @@ const Preview = forwardRef(({ formato, autorPor, embarques, embarqueSeleccionado
                 src={logoBase64 || '/zaro-logo.png'}
                 alt="Zaro Logo"
                 style={{ 
-                  height: windowWidth < 640 ? '100px' : windowWidth < 1024 ? '130px' : '160px',
+                  height: windowWidth < 640 ? '140px' : windowWidth < 1024 ? '180px' : '220px',
                   maxWidth: '100%',
                   margin: '0 auto',
                   display: 'block',
