@@ -178,7 +178,7 @@ export default function Editor({
               </label>
               <textarea
                 value={embarque.instrucciones}
-                onChange={(e) => actualizarEmbarque(embarque.id, 'instrucciones', e.target.value)}
+                onChange={(e) => actualizarEmbarque(embarque.id, 'instrucciones', e.target.value.toUpperCase())}
                 placeholder="Escribe las instrucciones específicas para este embarque..."
                 rows="3"
                 className="w-full px-3 py-2 sm:py-2.5 bg-[#0d0d0d] border border-[#333333] text-white rounded text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#E63946] focus:border-[#E63946] placeholder:text-[#888888] hover:border-[#3a3a3a] transition-all min-h-[80px] sm:min-h-[100px] uppercase"
