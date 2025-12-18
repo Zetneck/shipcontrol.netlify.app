@@ -29,6 +29,7 @@ export default function App() {
     { embarques: [{ ...DEFAULT_EMBARQUE, id: 1 }], autorPor: '' }
   ])
   const [indiceHistorial, setIndiceHistorial] = useState(0)
+  const [modalConfirmacion, setModalConfirmacion] = useState({ visible: false, tipoFormato: null })
   const previewRef = useRef(null)
   const ultimaAccionRef = useRef(null)
   const ignorarHistorialRef = useRef(false)
@@ -307,10 +308,16 @@ export default function App() {
     // Verificar duplicados
     const duplicadosDetectados = detectarDuplicados(listaValidar)
     if (duplicadosDetectados.length > 0) {
-      mostrarToast('❌ Existen embarques duplicados. No se puede exportar', 'error')
+      // Mostrar modal de confirmación en lugar de bloquear
+      setModalConfirmacion({ visible: true, tipoFormato })
       return
     }
 
+    // Si no hay duplicados, proceder directamente
+    await realizarExportacion(tipoFormato)
+  }
+
+  const realizarExportacion = async (tipoFormato) => {
     try {
       // Siempre exportar el contenedor completo con logo y encabezado
       if (!previewRef.current) return
@@ -345,6 +352,18 @@ export default function App() {
 
   const limpiarErrores = () => setErrores([])
 
+  const confirmarExportacionConDuplicados = async () => {
+    if (modalConfirmacion.tipoFormato) {
+      await realizarExportacion(modalConfirmacion.tipoFormato)
+    }
+    setModalConfirmacion({ visible: false, tipoFormato: null })
+  }
+
+  const cancelarExportacion = () => {
+    setModalConfirmacion({ visible: false, tipoFormato: null })
+    mostrarToast('Exportación cancelada', 'info')
+  }
+
   const cerrarToast = (id) => {
     setToasts(prev => prev.filter(t => t.id !== id))
   }
@@ -363,6 +382,51 @@ export default function App() {
           />
         ))}
       </div>
+
+      {/* Modal de Confirmación para Duplicados */}
+      {modalConfirmacion.visible && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 flex items-center justify-center p-4">
+          <div className="bg-[#1a1a1a] border border-[#333333] rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl animate-scaleIn">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="text-4xl">⚠️</div>
+              <div className="flex-1">
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                  Embarques Duplicados Detectados
+                </h2>
+                <p className="text-[#b3b3b3] text-sm sm:text-base leading-relaxed">
+                  Se encontraron embarques con los mismos datos (Operador, Unidad, Caja, Cliente). ¿Deseas continuar con la exportación?
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-[#0d0d0d] border border-[#333333] rounded-lg p-3 mb-6">
+              <p className="text-[#b3b3b3] text-xs font-semibold mb-2 uppercase">Embarques duplicados:</p>
+              <div className="flex flex-wrap gap-2">
+                {duplicados.map((dup, idx) => (
+                  <span key={idx} className="bg-[#E63946]/20 border border-[#E63946] text-[#E63946] px-3 py-1 rounded-full text-sm font-bold">
+                    #{dup.numeroEmbarque}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-3 sm:gap-4">
+              <button
+                onClick={cancelarExportacion}
+                className="flex-1 px-4 py-2.5 sm:py-3 bg-[#282828] hover:bg-[#333333] text-white rounded-lg font-bold transition-all hover:scale-105 active:scale-95"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmarExportacionConDuplicados}
+                className="flex-1 px-4 py-2.5 sm:py-3 bg-[#E63946] hover:bg-[#ff4757] text-white rounded-lg font-bold transition-all hover:scale-105 active:scale-95"
+              >
+                Continuar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto min-h-full flex flex-col gap-4">
         {/* Header */}
