@@ -305,10 +305,10 @@ export default function App() {
       return
     }
 
-    // Verificar duplicados
-    const duplicadosDetectados = detectarDuplicados(listaValidar)
+    // Verificar duplicados en TODA la lista, no solo en lo que se va a exportar
+    const duplicadosDetectados = detectarDuplicados(embarques)
     if (duplicadosDetectados.length > 0) {
-      // Mostrar modal de confirmación en lugar de bloquear
+      // Mostrar modal de confirmación obligatoria cuando hay duplicados
       setModalConfirmacion({ visible: true, tipoFormato, duplicadosDetectados })
       return
     }
