@@ -515,10 +515,10 @@ export default function App() {
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="font-bold text-amber-100 mb-3 flex items-center gap-3 text-lg">
-                  <span className="text-2xl">⛔</span> Embarques duplicados
+                  <span className="text-2xl">⚠️</span> Embarques duplicados detectados
                 </h3>
                 <p className="text-amber-200 text-sm mb-3">
-                  Se detectaron embarques con los mismos datos (Operador, Unidad, Caja, Cliente). No se puede exportar mientras existan duplicados.
+                  Se detectaron embarques con los mismos datos (Operador, Unidad, Caja, Cliente). Si intentas exportar, se te pedirá confirmación.
                 </p>
                 <ul className="text-amber-200 text-sm space-y-2">
                   {duplicados.map((dup, idx) => (
