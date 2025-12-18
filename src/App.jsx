@@ -29,7 +29,7 @@ export default function App() {
     { embarques: [{ ...DEFAULT_EMBARQUE, id: 1 }], autorPor: '' }
   ])
   const [indiceHistorial, setIndiceHistorial] = useState(0)
-  const [modalConfirmacion, setModalConfirmacion] = useState({ visible: false, tipoFormato: null })
+  const [modalConfirmacion, setModalConfirmacion] = useState({ visible: false, tipoFormato: null, duplicadosDetectados: [] })
   const previewRef = useRef(null)
   const ultimaAccionRef = useRef(null)
   const ignorarHistorialRef = useRef(false)
@@ -309,7 +309,7 @@ export default function App() {
     const duplicadosDetectados = detectarDuplicados(listaValidar)
     if (duplicadosDetectados.length > 0) {
       // Mostrar modal de confirmación en lugar de bloquear
-      setModalConfirmacion({ visible: true, tipoFormato })
+      setModalConfirmacion({ visible: true, tipoFormato, duplicadosDetectados })
       return
     }
 
@@ -356,11 +356,11 @@ export default function App() {
     if (modalConfirmacion.tipoFormato) {
       await realizarExportacion(modalConfirmacion.tipoFormato)
     }
-    setModalConfirmacion({ visible: false, tipoFormato: null })
+    setModalConfirmacion({ visible: false, tipoFormato: null, duplicadosDetectados: [] })
   }
 
   const cancelarExportacion = () => {
-    setModalConfirmacion({ visible: false, tipoFormato: null })
+    setModalConfirmacion({ visible: false, tipoFormato: null, duplicadosDetectados: [] })
     mostrarToast('Exportación cancelada', 'info')
   }
 
@@ -402,7 +402,7 @@ export default function App() {
             <div className="bg-[#0d0d0d] border border-[#333333] rounded-lg p-3 mb-6">
               <p className="text-[#b3b3b3] text-xs font-semibold mb-2 uppercase">Embarques duplicados:</p>
               <div className="flex flex-wrap gap-2">
-                {duplicados.map((dup, idx) => (
+                {modalConfirmacion.duplicadosDetectados.map((dup, idx) => (
                   <span key={idx} className="bg-[#E63946]/20 border border-[#E63946] text-[#E63946] px-3 py-1 rounded-full text-sm font-bold">
                     #{dup.numeroEmbarque}
                   </span>
