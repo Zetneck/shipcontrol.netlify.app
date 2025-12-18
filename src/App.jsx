@@ -22,6 +22,7 @@ export default function App() {
   ])
   const [autorPor, setAutorPor] = useState('')
   const [errores, setErrores] = useState([])
+  const [duplicados, setDuplicados] = useState([])
   const [toasts, setToasts] = useState([])
   const [embarqueSeleccionadoId, setEmbarqueSeleccionadoId] = useState(1)
   const [historial, setHistorial] = useState([
@@ -176,6 +177,11 @@ export default function App() {
     }
   }, [embarques, autorPor])
 
+  // Detectar duplicados cuando cambien los embarques
+  useEffect(() => {
+    detectarDuplicados(embarques)
+  }, [embarques])
+
   const agregarEmbarque = () => {
     const newEmbarque = {
       ...DEFAULT_EMBARQUE,
@@ -257,11 +263,51 @@ export default function App() {
     return nuevosErrores.length === 0
   }
 
+  const detectarDuplicados = (lista = embarques) => {
+    const duplicadosEncontrados = []
+    const vistos = {}
+
+    lista.forEach((embarque, index) => {
+      // Crear una clave única combinando los campos principales
+      const clave = `${embarque.operador.trim().toUpperCase()}|${embarque.unidad.trim().toUpperCase()}|${embarque.caja.trim().toUpperCase()}|${embarque.cliente.trim().toUpperCase()}`
+      
+      if (vistos[clave]) {
+        // Si ya existe, marcar ambos como duplicados
+        const indicePrevio = vistos[clave]
+        if (!duplicadosEncontrados.find(d => d.numeroEmbarque === indicePrevio)) {
+          duplicadosEncontrados.push({
+            numeroEmbarque: indicePrevio,
+            tipo: 'duplicado'
+          })
+        }
+        duplicadosEncontrados.push({
+          numeroEmbarque: index + 1,
+          tipo: 'duplicado'
+        })
+      } else {
+        vistos[clave] = index + 1
+      }
+    })
+
+    setDuplicados(duplicadosEncontrados)
+    return duplicadosEncontrados
+  }
+
+  const limpiarDuplicados = () => setDuplicados([])
+
   const exportarImagen = async (tipoFormato) => {
     const seleccionado = embarques.find(e => e.id === embarqueSeleccionadoId)
     const listaValidar = seleccionado ? [seleccionado] : embarques
+    
     if (!validarEmbarques(listaValidar)) {
       mostrarToast('Por favor completa los campos requeridos', 'error')
+      return
+    }
+
+    // Verificar duplicados
+    const duplicadosDetectados = detectarDuplicados(listaValidar)
+    if (duplicadosDetectados.length > 0) {
+      mostrarToast('❌ Existen embarques duplicados. No se puede exportar', 'error')
       return
     }
 
@@ -392,6 +438,36 @@ export default function App() {
               <button
                 onClick={limpiarErrores}
                 className="text-red-200 hover:text-white font-bold text-xl transition-all hover:scale-125 active:scale-95"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Alerta de embarques duplicados */}
+        {duplicados.length > 0 && (
+          <div className="bg-gradient-to-r from-amber-950/80 to-orange-900/80 border border-amber-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 mb-4 sm:mb-5 md:mb-7 text-amber-100 shadow-2xl shadow-amber-900/40 backdrop-blur-sm animate-scaleIn card-hover">
+            <div className="flex justify-between items-start">
+              <div>
+                <h3 className="font-bold text-amber-100 mb-3 flex items-center gap-3 text-lg">
+                  <span className="text-2xl">⛔</span> Embarques duplicados
+                </h3>
+                <p className="text-amber-200 text-sm mb-3">
+                  Se detectaron embarques con los mismos datos (Operador, Unidad, Caja, Cliente). No se puede exportar mientras existan duplicados.
+                </p>
+                <ul className="text-amber-200 text-sm space-y-2">
+                  {duplicados.map((dup, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="text-amber-400">•</span>
+                      <span>Embarque #{dup.numeroEmbarque}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={limpiarDuplicados}
+                className="text-amber-200 hover:text-white font-bold text-xl transition-all hover:scale-125 active:scale-95"
               >
                 ✕
               </button>
